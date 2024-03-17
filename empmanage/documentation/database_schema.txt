@@ -1,0 +1,50 @@
+//https://dbdiagram.io/d
+
+Table User {
+  id int [pk, increment] // primary key
+  password varchar(128)
+  last_login datetime
+  is_superuser boolean
+  username varchar(150) [unique]
+  first_name varchar(150)
+  last_name varchar(150)
+  email varchar(254) [unique]
+  is_staff boolean
+  is_active boolean
+  date_joined datetime
+  // add any other fields you have in your User model
+}
+
+
+// Define tables
+Table Employee {
+  id int [pk, increment] // primary key
+  designation designation_choices
+  department department_choices
+  phone varchar(255)
+  user_id int [ref: > User.id, unique] // one-to-one relationship with User
+  total_cl int [default: 7, note: 'min: 0, max: 7']
+  total_sl int [default: 7, note: 'min: 0, max: 7']
+  total_el int [default: 0, note: 'min: 0, max: 13']
+}
+
+Table EmployeeAttendance {
+  id int [pk, increment] // primary key
+  attendance attendance_choices
+  location location_choices
+  in_time datetime
+  out_time datetime
+  activity_description text
+  comment text
+  employee_id int [ref: > Employee.id] // many-to-one relationship with Employee
+}
+
+Table EmployeeLeave {
+  id int [pk, increment] // primary key
+  leave leave_choices
+  leave_reason text
+  leave_from datetime
+  leave_to datetime
+  total_days int
+  employee_id int [ref: > Employee.id] // many-to-one relationship with Employee
+}

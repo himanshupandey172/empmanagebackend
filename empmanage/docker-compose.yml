@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    command: ./wait-for-it.sh mysql:3306 -- ./docker-entrypoint.sh
+    # image: django-app
+    depends_on:
+      - db
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+  db:
+    image: mysql:8.0
+    # networks:
+    #   - app-network
+    environment:
+      - MYSQL_DATABASE=empmanage
+      - MYSQL_USER=empmanage
+      - MYSQL_PASSWORD=S@b8at1ze
+      - MYSQL_ROOT_PASSWORD=S@b8at1ze
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+# networks:
+#   app-network:
+#     driver: bridge
+
+volumes:
+  dbdata:
