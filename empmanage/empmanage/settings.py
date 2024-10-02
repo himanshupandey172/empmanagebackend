@@ -125,7 +125,7 @@ DATABASES = {
         "NAME": "empmanage",
         "HOST": "localhost",
         "USER": "root",
-        "PASSWORD": "S@b8at1ze",
+        "PASSWORD": "A@C9bu1ze",
     }
 }
 
@@ -135,7 +135,7 @@ DATABASES = {
 #         "ENGINE": "django.db.backends.mysql",
 #         "NAME": "empmanage",
 #         "USER": "empmanage",
-#         "PASSWORD": "S@b8at1ze",
+#         "PASSWORD": "A@C9bu1ze",
 #         "HOST": "db",
 #         "PORT": 3306,
 #     }
