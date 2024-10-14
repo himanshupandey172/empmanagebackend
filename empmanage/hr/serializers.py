@@ -2,7 +2,13 @@ from datetime import datetime, timedelta
 
 from rest_framework import serializers
 
-from .models import Employee, EmployeeAttendance, EmployeeLeave
+from .models import (
+    Employee,
+    EmployeeAttendance,
+    EmployeeLeave,
+    EmployeeExpense,
+    EmployeeTimesheet,
+)
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -175,3 +181,46 @@ class CreateEmployeeLeaveSerializer(serializers.ModelSerializer):
                 f"You have {balance} {leave_type} left and you applied for {validated_data['total_days']} {leave_type}. Please apply for a different leave type or a valid number of days."
             )
         return EmployeeLeave.objects.create(employee_id=employee_id, **validated_data)
+
+
+class EmployeeExpenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeExpense
+        fields = [
+            "id",  # Assuming you want to return the ID of the created expense
+            "amount",
+            "description",
+            "date",
+        ]
+        read_only_fields = [
+            "employee"
+        ]  # Set employee as read-only since it will be set automatically
+
+    def create(self, validated_data):
+        # Retrieve the logged-in employee instance
+        employee = self.context["request"].user.employee
+
+        # Assign the employee to validated data
+        validated_data["employee"] = employee
+
+        # Create and return the new Expense instance
+        expense = EmployeeExpense.objects.create(**validated_data)
+        return expense
+
+
+# Timesheet serializer
+class EmployeeTimesheetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeTimesheet
+        fields = [
+            "id",
+            "employee",  # Change to employee since your Timesheet model references Employee
+            "work_date",  # Ensure the field matches your model
+            "hours_worked",  # Correct to hours_worked since that's the model field
+        ]
+
+    def create(self, validated_data):
+        employee = self.context["request"].user.employee  # Get the logged-in employee
+        validated_data["employee"] = employee  # Set the employee field
+        timesheet = EmployeeTimesheet.objects.create(**validated_data)
+        return timesheet

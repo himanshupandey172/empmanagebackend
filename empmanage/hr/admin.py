@@ -48,3 +48,25 @@ class LeaveAdmin(admin.ModelAdmin):
         "total_days",
         "employee",
     ]
+
+
+@admin.register(models.EmployeeExpense)
+class ExpenseAdmin(admin.ModelAdmin):
+    list_select_related = ["employee"]
+    list_display = [
+        "amount",
+        "description",
+        "date",
+        "employee",
+    ]
+
+
+@admin.register(models.EmployeeTimesheet)
+class TimesheetAdmin(admin.ModelAdmin):
+    list_select_related = ["employee"]
+    list_display = [
+        "work_date",
+        "hours_worked",
+        "task_description",
+        "employee",
+    ]

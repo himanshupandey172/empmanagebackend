@@ -125,7 +125,8 @@ DATABASES = {
         "NAME": "empmanage",
         "HOST": "localhost",
         "USER": "root",
-        "PASSWORD": "A@C9bu1ze",
+        # "PASSWORD": "A@C9bu1ze",
+        "PASSWORD": "Aryan@1234",
     }
 }
 

@@ -11,6 +11,8 @@ router = routers.DefaultRouter()
 router.register("employees", views.EmployeeViewSet)
 router.register("attendance", views.EmployeeAttendanceViewSet, basename="attendance")
 router.register("leaves", views.EmployeeLeaveViewSet, basename="leaves")
-
+router.register("expenses", views.EmployeeExpenseViewSet, basename="expenses")
+router.register("timesheets", views.EmployeeTimesheetViewSet, basename="timesheets")
 urlpatterns = router.urls
+
 # pprint(router.urls)

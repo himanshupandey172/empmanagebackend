@@ -189,7 +189,7 @@ class EmployeeLeave(models.Model):
     leave_reason = models.TextField(null=True, blank=True)
     leave_from = models.DateTimeField(null=True, blank=True)
     leave_to = models.DateTimeField(null=True, blank=True)
-    total_days = models.PositiveIntegerField()
+    total_days = models.PositiveIntegerField(default=0)
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
@@ -205,6 +205,20 @@ class EmployeeLeave(models.Model):
 
         # Call the original delete method to handle the actual deletion
         super(EmployeeLeave, self).delete(*args, **kwargs)
+
+
+class EmployeeExpense(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+    date = models.DateField()
+
+
+class EmployeeTimesheet(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    work_date = models.DateField()
+    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
+    task_description = models.TextField()
 
 
 # Sick Leave=7 leaves (Jan-dec)

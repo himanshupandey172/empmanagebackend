@@ -3,7 +3,13 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.filters import OrderingFilter
-from .models import Employee, EmployeeAttendance, EmployeeLeave
+from .models import (
+    Employee,
+    EmployeeAttendance,
+    EmployeeLeave,
+    EmployeeTimesheet,
+    EmployeeExpense,
+)
 from .serializers import (
     EmployeeSerializer,
     UpdateEmployeeSerializer,
@@ -12,6 +18,8 @@ from .serializers import (
     CreateEmployeeLeaveSerializer,
     CreateEmployeeAttendanceSerializer,
     UpdateEmployeeAttendanceSerializer,
+    EmployeeExpenseSerializer,
+    EmployeeTimesheetSerializer,
 )
 from .pagination import DefaultPagination
 from django.shortcuts import get_object_or_404
@@ -126,3 +134,51 @@ class EmployeeLeaveViewSet(ModelViewSet):
         # You can add additional logic here if needed
 
         return response
+
+
+class EmployeeExpenseViewSet(ModelViewSet):
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
+    serializer_class = EmployeeExpenseSerializer
+    pagination_class = DefaultPagination
+    filter_backends = [OrderingFilter]
+
+    def get_permissions(self):
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return EmployeeExpense.objects.select_related("employee").all()
+        self.employee = Employee.objects.select_related("user").get(user_id=user.id)
+        return EmployeeExpense.objects.select_related("employee").filter(
+            employee_id=self.employee.id
+        )
+
+    def get_serializer_context(self):
+        user = self.request.user
+        self.employee = Employee.objects.select_related("user").get(user_id=user.id)
+        return {"employee_id": self.employee.id}
+
+
+class EmployeeTimesheetViewSet(ModelViewSet):
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
+    serializer_class = EmployeeTimesheetSerializer
+    pagination_class = DefaultPagination
+    filter_backends = [OrderingFilter]
+
+    def get_permissions(self):
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return EmployeeTimesheet.objects.select_related("employee").all()
+        self.employee = Employee.objects.select_related("user").get(user_id=user.id)
+        return EmployeeTimesheet.objects.select_related("employee").filter(
+            employee_id=self.employee.id
+        )
+
+    def get_serializer_context(self):
+        user = self.request.user
+        self.employee = Employee.objects.select_related("user").get(user_id=user.id)
+        return {"employee_id": self.employee.id}
